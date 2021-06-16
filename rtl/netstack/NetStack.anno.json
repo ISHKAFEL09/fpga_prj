@@ -1,0 +1,35 @@
+[
+  {
+    "class":"firrtl.transforms.CombinationalPath",
+    "sink":"~NetStack|NetStack>rgmii_ereset",
+    "sources":[
+      "~NetStack|NetStack>reset"
+    ]
+  },
+  {
+    "class":"firrtl.EmitCircuitAnnotation",
+    "emitter":"firrtl.VerilogEmitter"
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|NetStack>rxMac_bits",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|NetStack>rxMac_bits"
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|NetStack>rxMac_valid",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|NetStack>rxMac_valid"
+  },
+  {
+    "class":"firrtl.transforms.BlackBoxTargetDirAnno",
+    "targetDir":"rtl/netstack"
+  }
+]

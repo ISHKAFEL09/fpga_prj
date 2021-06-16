@@ -18,7 +18,7 @@ lazy val root = (project in file("."))
       "-feature",
       "-Xcheckinit",
       // Enables autoclonetype2 in 3.4.x (on by default in 3.5)
-      "-P:chiselplugin:useBundlePlugin"
+//      "-P:chiselplugin:useBundlePlugin"
     ),
     addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % "3.4.2" cross CrossVersion.full),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
