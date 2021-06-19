@@ -17,4 +17,15 @@ object Interface {
     //  val mdoEn = Output(Bool())
     val ereset = Output(Bool())
   }
+
+  case class Mac2IpIf() extends Bundle {
+    val arpData = ValidIO(UInt(8.W))
+    val ipData = ValidIO(UInt(8.W))
+  }
+
+  case class Mac2CrcIf() extends Bundle {
+    val crcData = ValidIO(UInt(8.W))
+    val crcDone = Input(Bool())
+    val crcErr = Input(Bool())
+  }
 }

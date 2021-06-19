@@ -3,8 +3,20 @@
     "class":"firrtl.transforms.CombinationalPath",
     "sink":"~NetStack|NetStack>rgmii_ereset",
     "sources":[
-      "~NetStack|NetStack>reset"
+      "~NetStack|NetStack>reset_n"
     ]
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~NetStack|FpgaFifo",
+    "duplicate":"~NetStack|NetStack/rgmiiTransfer:RgmiiTransfer/topHalfFifo:FpgaFifo",
+    "index":0.2
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~NetStack|FpgaFifo_1",
+    "duplicate":"~NetStack|NetStack/rgmiiTransfer:RgmiiTransfer/bottomHalfFifo:FpgaFifo",
+    "index":0.4
   },
   {
     "class":"firrtl.EmitCircuitAnnotation",
@@ -12,21 +24,30 @@
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|NetStack>rxMac_bits",
+    "target":"~NetStack|NetStack>rgmii_rxData",
     "description":"mark_debug = \"true\""
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|NetStack>rxMac_bits"
+    "target":"~NetStack|NetStack>rgmii_rxData"
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|NetStack>rxMac_valid",
+    "target":"~NetStack|NetStack>rgmii_rxCtrl",
     "description":"mark_debug = \"true\""
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|NetStack>rxMac_valid"
+    "target":"~NetStack|NetStack>rgmii_rxCtrl"
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|NetStack>rgmii_rxClock",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|NetStack>rgmii_rxClock"
   },
   {
     "class":"firrtl.transforms.BlackBoxTargetDirAnno",
