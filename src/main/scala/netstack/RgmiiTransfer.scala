@@ -33,6 +33,7 @@ case class RgmiiTransfer() extends Module {
   bottomHalfFifo.io.rd_clk <> clock
   bottomHalfFifo.io.rd_en := io.rx.valid
 
-  io.rx.valid := RegNext(!topHalfFifo.io.empty && !bottomHalfFifo.io.empty)
+  val notEmpty = !topHalfFifo.io.empty && !bottomHalfFifo.io.empty
+  io.rx.valid := RegNext(notEmpty) && notEmpty
   io.rx.bits := Cat(topHalfFifo.io.dout, bottomHalfFifo.io.dout)
 }

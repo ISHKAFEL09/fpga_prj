@@ -3,7 +3,8 @@ module RgmiiTransfer(
   input        io_rgmii_rxClock,
   input  [3:0] io_rgmii_rxData,
   input        io_rgmii_rxCtrl,
-  output       io_rx_valid
+  output       io_rx_valid,
+  output [7:0] io_rx_bits
 );
 `ifdef RANDOMIZE_REG_INIT
   reg [31:0] _RAND_0;
@@ -30,7 +31,8 @@ module RgmiiTransfer(
   wire  bottomHalfFifo_empty; // @[RgmiiTransfer.scala 20:30]
   wire  bottomHalfFifo_almost_empty; // @[RgmiiTransfer.scala 20:30]
   reg  topHalfFifo_io_wr_en_REG; // @[RgmiiTransfer.scala 24:36]
-  reg  io_rx_valid_REG; // @[RgmiiTransfer.scala 36:25]
+  wire  notEmpty = ~topHalfFifo_empty & ~bottomHalfFifo_empty; // @[RgmiiTransfer.scala 36:40]
+  reg  io_rx_valid_REG; // @[RgmiiTransfer.scala 37:25]
   FpgaFifo topHalfFifo ( // @[RgmiiTransfer.scala 19:27]
     .wr_clk(topHalfFifo_wr_clk),
     .rd_clk(topHalfFifo_rd_clk),
@@ -55,7 +57,8 @@ module RgmiiTransfer(
     .empty(bottomHalfFifo_empty),
     .almost_empty(bottomHalfFifo_almost_empty)
   );
-  assign io_rx_valid = io_rx_valid_REG; // @[RgmiiTransfer.scala 36:15]
+  assign io_rx_valid = io_rx_valid_REG & notEmpty; // @[RgmiiTransfer.scala 37:36]
+  assign io_rx_bits = {topHalfFifo_dout,bottomHalfFifo_dout}; // @[Cat.scala 30:58]
   assign topHalfFifo_wr_clk = ~io_rgmii_rxClock; // @[RgmiiTransfer.scala 22:44]
   assign topHalfFifo_rd_clk = clock; // @[RgmiiTransfer.scala 27:25]
   assign topHalfFifo_din = io_rgmii_rxData; // @[RgmiiTransfer.scala 26:22]
@@ -70,7 +73,7 @@ module RgmiiTransfer(
     topHalfFifo_io_wr_en_REG <= io_rgmii_rxCtrl; // @[RgmiiTransfer.scala 24:36]
   end
   always @(posedge clock) begin
-    io_rx_valid_REG <= ~topHalfFifo_empty & ~bottomHalfFifo_empty; // @[RgmiiTransfer.scala 36:48]
+    io_rx_valid_REG <= ~topHalfFifo_empty & ~bottomHalfFifo_empty; // @[RgmiiTransfer.scala 36:40]
   end
 // Register and memory initialization
 `ifdef RANDOMIZE_GARBAGE_ASSIGN
@@ -120,20 +123,202 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
+module MacReceive(
+  input         clock,
+  input         reset,
+  input         io_rx_valid,
+  input  [7:0]  io_rx_bits,
+
+  (* mark_debug = "true" *)
+  output        io_debugPort_rxValid,
+
+  (* mark_debug = "true" *)
+  output [7:0]  io_debugPort_rxData,
+
+  (* mark_debug = "true" *)
+  output [7:0]  io_debugPort_state,
+
+  (* mark_debug = "true" *)
+  output [7:0]  io_debugPort_cnt,
+
+  (* mark_debug = "true" *)
+  output [15:0] io_debugPort_macType
+);
+`ifdef RANDOMIZE_REG_INIT
+  reg [31:0] _RAND_0;
+  reg [31:0] _RAND_1;
+  reg [31:0] _RAND_2;
+  reg [31:0] _RAND_3;
+`endif // RANDOMIZE_REG_INIT
+  reg [7:0] macType_0; // @[MacReceive.scala 31:20]
+  reg [7:0] macType_1; // @[MacReceive.scala 31:20]
+  reg [10:0] cnt_value; // @[Counter.scala 60:40]
+  reg [3:0] stateReg; // @[MacReceive.scala 36:25]
+  wire  _T = 4'h0 == stateReg; // @[Conditional.scala 37:30]
+  wire  wrap = cnt_value == 11'h5db; // @[Counter.scala 72:24]
+  wire [10:0] _value_T_1 = cnt_value + 11'h1; // @[Counter.scala 76:24]
+  wire [10:0] _GEN_0 = wrap ? 11'h0 : _value_T_1; // @[Counter.scala 86:20 Counter.scala 86:28 Counter.scala 76:15]
+  wire  _T_3 = 4'h1 == stateReg; // @[Conditional.scala 37:30]
+  wire [7:0] _GEN_10 = 3'h7 == cnt_value[2:0] ? 8'hd5 : 8'h55; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
+  wire [10:0] _GEN_12 = io_rx_valid & io_rx_bits == _GEN_10 ? _GEN_0 : 11'h0; // @[MacReceive.scala 41:80 Counter.scala 97:11]
+  wire [3:0] _GEN_13 = io_rx_valid & io_rx_bits == _GEN_10 ? stateReg : 4'h0; // @[MacReceive.scala 41:80 MacReceive.scala 36:25 MacReceive.scala 45:16]
+  wire  _T_8 = 4'h2 == stateReg; // @[Conditional.scala 37:30]
+  wire [7:0] _GEN_17 = 3'h1 == cnt_value[2:0] ? 8'h34 : 8'h12; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
+  wire [7:0] _GEN_18 = 3'h2 == cnt_value[2:0] ? 8'h55 : _GEN_17; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
+  wire [7:0] _GEN_19 = 3'h3 == cnt_value[2:0] ? 8'haa : _GEN_18; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
+  wire [7:0] _GEN_20 = 3'h4 == cnt_value[2:0] ? 8'hff : _GEN_19; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
+  wire [7:0] _GEN_21 = 3'h5 == cnt_value[2:0] ? 8'h0 : _GEN_20; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
+  wire [10:0] _GEN_29 = io_rx_valid & (io_rx_bits == _GEN_21 | io_rx_bits == 8'hff) ? _GEN_0 : 11'h0; // @[MacReceive.scala 41:80 Counter.scala 97:11]
+  wire [3:0] _GEN_30 = io_rx_valid & (io_rx_bits == _GEN_21 | io_rx_bits == 8'hff) ? stateReg : 4'h0; // @[MacReceive.scala 41:80 MacReceive.scala 36:25 MacReceive.scala 45:16]
+  wire  _T_15 = cnt_value == 11'h5; // @[MacReceive.scala 47:21]
+  wire [10:0] _GEN_31 = cnt_value == 11'h5 ? 11'h0 : _GEN_29; // @[MacReceive.scala 47:38 Counter.scala 97:11]
+  wire [3:0] _GEN_32 = cnt_value == 11'h5 ? 4'h3 : _GEN_30; // @[MacReceive.scala 47:38 MacReceive.scala 49:16]
+  wire  _T_16 = 4'h3 == stateReg; // @[Conditional.scala 37:30]
+  wire [10:0] _GEN_34 = _T_15 ? 11'h0 : _GEN_0; // @[MacReceive.scala 75:39 Counter.scala 97:11]
+  wire [3:0] _GEN_35 = _T_15 ? 4'h4 : stateReg; // @[MacReceive.scala 75:39 MacReceive.scala 77:20 MacReceive.scala 36:25]
+  wire [10:0] _GEN_36 = io_rx_valid ? _GEN_34 : 11'h0; // @[MacReceive.scala 73:21 Counter.scala 97:11]
+  wire [3:0] _GEN_37 = io_rx_valid ? _GEN_35 : 4'h0; // @[MacReceive.scala 73:21 MacReceive.scala 81:18]
+  wire  _T_18 = 4'h4 == stateReg; // @[Conditional.scala 37:30]
+  wire [7:0] _GEN_38 = io_rx_valid & 11'h0 == cnt_value ? io_rx_bits : macType_1; // @[MacReceive.scala 55:42 MacReceive.scala 56:33 MacReceive.scala 31:20]
+  wire [7:0] _GEN_39 = io_rx_valid & 11'h1 == cnt_value ? io_rx_bits : macType_0; // @[MacReceive.scala 55:42 MacReceive.scala 56:33 MacReceive.scala 31:20]
+  wire [10:0] _GEN_41 = cnt_value == 11'h1 ? 11'h0 : _GEN_0; // @[MacReceive.scala 61:44 Counter.scala 97:11]
+  wire [3:0] _GEN_42 = cnt_value == 11'h1 ? 4'h5 : stateReg; // @[MacReceive.scala 61:44 MacReceive.scala 63:18 MacReceive.scala 36:25]
+  wire [10:0] _GEN_43 = io_rx_valid ? _GEN_41 : 11'h0; // @[MacReceive.scala 59:20 Counter.scala 97:11]
+  wire [3:0] _GEN_44 = io_rx_valid ? _GEN_42 : 4'h0; // @[MacReceive.scala 59:20 MacReceive.scala 67:16]
+  wire  _T_24 = 4'h5 == stateReg; // @[Conditional.scala 37:30]
+  wire [3:0] _GEN_45 = ~io_rx_valid ? 4'h6 : stateReg; // @[MacReceive.scala 84:23 MacReceive.scala 84:34 MacReceive.scala 36:25]
+  wire  _T_26 = 4'h6 == stateReg; // @[Conditional.scala 37:30]
+  wire [3:0] _GEN_46 = _T_26 ? 4'h0 : stateReg; // @[Conditional.scala 39:67 MacReceive.scala 111:16 MacReceive.scala 36:25]
+  wire [3:0] _GEN_47 = _T_24 ? _GEN_45 : _GEN_46; // @[Conditional.scala 39:67]
+  wire [7:0] _GEN_48 = _T_18 ? _GEN_38 : macType_1; // @[Conditional.scala 39:67 MacReceive.scala 31:20]
+  wire [7:0] _GEN_49 = _T_18 ? _GEN_39 : macType_0; // @[Conditional.scala 39:67 MacReceive.scala 31:20]
+  wire [10:0] _GEN_50 = _T_18 ? _GEN_43 : cnt_value; // @[Conditional.scala 39:67 Counter.scala 60:40]
+  wire [3:0] _GEN_51 = _T_18 ? _GEN_44 : _GEN_47; // @[Conditional.scala 39:67]
+  wire [10:0] _GEN_52 = _T_16 ? _GEN_36 : _GEN_50; // @[Conditional.scala 39:67]
+  wire [3:0] _GEN_53 = _T_16 ? _GEN_37 : _GEN_51; // @[Conditional.scala 39:67]
+  assign io_debugPort_rxValid = io_rx_valid; // @[MacReceive.scala 117:24]
+  assign io_debugPort_rxData = io_rx_bits; // @[MacReceive.scala 118:23]
+  assign io_debugPort_state = {{4'd0}, stateReg}; // @[MacReceive.scala 115:22]
+  assign io_debugPort_cnt = cnt_value[7:0]; // @[MacReceive.scala 116:20]
+  assign io_debugPort_macType = {macType_1,macType_0}; // @[MacReceive.scala 119:43]
+  always @(posedge clock) begin
+    if (!(_T)) begin // @[Conditional.scala 40:58]
+      if (!(_T_3)) begin // @[Conditional.scala 39:67]
+        if (!(_T_8)) begin // @[Conditional.scala 39:67]
+          if (!(_T_16)) begin // @[Conditional.scala 39:67]
+            macType_0 <= _GEN_49;
+          end
+        end
+      end
+    end
+    if (!(_T)) begin // @[Conditional.scala 40:58]
+      if (!(_T_3)) begin // @[Conditional.scala 39:67]
+        if (!(_T_8)) begin // @[Conditional.scala 39:67]
+          if (!(_T_16)) begin // @[Conditional.scala 39:67]
+            macType_1 <= _GEN_48;
+          end
+        end
+      end
+    end
+    if (reset) begin // @[Counter.scala 60:40]
+      cnt_value <= 11'h0; // @[Counter.scala 60:40]
+    end else if (_T) begin // @[Conditional.scala 40:58]
+      if (io_rx_valid & io_rx_bits == 8'h55) begin // @[MacReceive.scala 90:48]
+        if (wrap) begin // @[Counter.scala 86:20]
+          cnt_value <= 11'h0; // @[Counter.scala 86:28]
+        end else begin
+          cnt_value <= _value_T_1; // @[Counter.scala 76:15]
+        end
+      end
+    end else if (_T_3) begin // @[Conditional.scala 39:67]
+      if (cnt_value == 11'h7) begin // @[MacReceive.scala 47:38]
+        cnt_value <= 11'h0; // @[Counter.scala 97:11]
+      end else begin
+        cnt_value <= _GEN_12;
+      end
+    end else if (_T_8) begin // @[Conditional.scala 39:67]
+      cnt_value <= _GEN_31;
+    end else begin
+      cnt_value <= _GEN_52;
+    end
+    if (reset) begin // @[MacReceive.scala 36:25]
+      stateReg <= 4'h0; // @[MacReceive.scala 36:25]
+    end else if (_T) begin // @[Conditional.scala 40:58]
+      if (io_rx_valid & io_rx_bits == 8'h55) begin // @[MacReceive.scala 90:48]
+        stateReg <= 4'h1; // @[MacReceive.scala 92:18]
+      end
+    end else if (_T_3) begin // @[Conditional.scala 39:67]
+      if (cnt_value == 11'h7) begin // @[MacReceive.scala 47:38]
+        stateReg <= 4'h2; // @[MacReceive.scala 49:16]
+      end else begin
+        stateReg <= _GEN_13;
+      end
+    end else if (_T_8) begin // @[Conditional.scala 39:67]
+      stateReg <= _GEN_32;
+    end else begin
+      stateReg <= _GEN_53;
+    end
+  end
+// Register and memory initialization
+`ifdef RANDOMIZE_GARBAGE_ASSIGN
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_INVALID_ASSIGN
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_REG_INIT
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_MEM_INIT
+`define RANDOMIZE
+`endif
+`ifndef RANDOM
+`define RANDOM $random
+`endif
+`ifdef RANDOMIZE_MEM_INIT
+  integer initvar;
+`endif
+`ifndef SYNTHESIS
+`ifdef FIRRTL_BEFORE_INITIAL
+`FIRRTL_BEFORE_INITIAL
+`endif
+initial begin
+  `ifdef RANDOMIZE
+    `ifdef INIT_RANDOM
+      `INIT_RANDOM
+    `endif
+    `ifndef VERILATOR
+      `ifdef RANDOMIZE_DELAY
+        #`RANDOMIZE_DELAY begin end
+      `else
+        #0.002 begin end
+      `endif
+    `endif
+`ifdef RANDOMIZE_REG_INIT
+  _RAND_0 = {1{`RANDOM}};
+  macType_0 = _RAND_0[7:0];
+  _RAND_1 = {1{`RANDOM}};
+  macType_1 = _RAND_1[7:0];
+  _RAND_2 = {1{`RANDOM}};
+  cnt_value = _RAND_2[10:0];
+  _RAND_3 = {1{`RANDOM}};
+  stateReg = _RAND_3[3:0];
+`endif // RANDOMIZE_REG_INIT
+  `endif // RANDOMIZE
+end // initial
+`ifdef FIRRTL_AFTER_INITIAL
+`FIRRTL_AFTER_INITIAL
+`endif
+`endif // SYNTHESIS
+endmodule
 module NetStack(
   input        clock,
   input        reset_n,
   output       rgmii_txClock,
   output [3:0] rgmii_txData,
   output       rgmii_txCtrl,
-
-  (* mark_debug = "true" *)
   input        rgmii_rxClock,
-
-  (* mark_debug = "true" *)
   input  [3:0] rgmii_rxData,
-
-  (* mark_debug = "true" *)
   input        rgmii_rxCtrl,
   output       rgmii_ereset,
   output [3:0] led
@@ -154,8 +339,18 @@ module NetStack(
   wire [3:0] rgmiiTransfer_io_rgmii_rxData; // @[NetStack.scala 19:31]
   wire  rgmiiTransfer_io_rgmii_rxCtrl; // @[NetStack.scala 19:31]
   wire  rgmiiTransfer_io_rx_valid; // @[NetStack.scala 19:31]
+  wire [7:0] rgmiiTransfer_io_rx_bits; // @[NetStack.scala 19:31]
+  wire  macReceive_clock; // @[NetStack.scala 20:28]
+  wire  macReceive_reset; // @[NetStack.scala 20:28]
+  wire  macReceive_io_rx_valid; // @[NetStack.scala 20:28]
+  wire [7:0] macReceive_io_rx_bits; // @[NetStack.scala 20:28]
+  wire  macReceive_io_debugPort_rxValid; // @[NetStack.scala 20:28]
+  wire [7:0] macReceive_io_debugPort_rxData; // @[NetStack.scala 20:28]
+  wire [7:0] macReceive_io_debugPort_state; // @[NetStack.scala 20:28]
+  wire [7:0] macReceive_io_debugPort_cnt; // @[NetStack.scala 20:28]
+  wire [15:0] macReceive_io_debugPort_macType; // @[NetStack.scala 20:28]
   wire  reset = ~reset_n; // @[package.scala 12:17]
-  reg  led_lo; // @[NetStack.scala 39:25]
+  reg  led_lo; // @[NetStack.scala 34:25]
   reg [25:0] done_value; // @[Counter.scala 60:40]
   wire  done_wrap_wrap = done_value == 26'h2faf07f; // @[Counter.scala 72:24]
   wire [25:0] _done_wrap_value_T_1 = done_value + 26'h1; // @[Counter.scala 76:24]
@@ -174,12 +369,24 @@ module NetStack(
     .io_rgmii_rxClock(rgmiiTransfer_io_rgmii_rxClock),
     .io_rgmii_rxData(rgmiiTransfer_io_rgmii_rxData),
     .io_rgmii_rxCtrl(rgmiiTransfer_io_rgmii_rxCtrl),
-    .io_rx_valid(rgmiiTransfer_io_rx_valid)
+    .io_rx_valid(rgmiiTransfer_io_rx_valid),
+    .io_rx_bits(rgmiiTransfer_io_rx_bits)
+  );
+  MacReceive macReceive ( // @[NetStack.scala 20:28]
+    .clock(macReceive_clock),
+    .reset(macReceive_reset),
+    .io_rx_valid(macReceive_io_rx_valid),
+    .io_rx_bits(macReceive_io_rx_bits),
+    .io_debugPort_rxValid(macReceive_io_debugPort_rxValid),
+    .io_debugPort_rxData(macReceive_io_debugPort_rxData),
+    .io_debugPort_state(macReceive_io_debugPort_state),
+    .io_debugPort_cnt(macReceive_io_debugPort_cnt),
+    .io_debugPort_macType(macReceive_io_debugPort_macType)
   );
   assign rgmii_txClock = 1'h0; // @[NetStack.scala 25:28]
   assign rgmii_txData = 4'h0; // @[NetStack.scala 25:28]
   assign rgmii_txCtrl = 1'h0; // @[NetStack.scala 25:28]
-  assign rgmii_ereset = reset_n; // @[NetStack.scala 37:16]
+  assign rgmii_ereset = reset_n; // @[NetStack.scala 32:16]
   assign led = {{2'd0}, _led_T}; // @[Cat.scala 30:58]
   assign pll_clk_in = clock; // @[NetStack.scala 13:17]
   assign pll_reset = ~reset_n; // @[package.scala 12:17]
@@ -187,11 +394,15 @@ module NetStack(
   assign rgmiiTransfer_io_rgmii_rxClock = rgmii_rxClock; // @[NetStack.scala 25:28]
   assign rgmiiTransfer_io_rgmii_rxData = rgmii_rxData; // @[NetStack.scala 25:28]
   assign rgmiiTransfer_io_rgmii_rxCtrl = rgmii_rxCtrl; // @[NetStack.scala 25:28]
+  assign macReceive_clock = pll_clk_125;
+  assign macReceive_reset = ~reset_n; // @[package.scala 12:17]
+  assign macReceive_io_rx_valid = rgmiiTransfer_io_rx_valid; // @[NetStack.scala 26:25]
+  assign macReceive_io_rx_bits = rgmiiTransfer_io_rx_bits; // @[NetStack.scala 26:25]
   always @(posedge pll_clk_100) begin
-    if (reset) begin // @[NetStack.scala 39:25]
-      led_lo <= 1'h0; // @[NetStack.scala 39:25]
-    end else if (done_wrap_wrap) begin // @[NetStack.scala 41:17]
-      led_lo <= ~led_lo; // @[NetStack.scala 41:26]
+    if (reset) begin // @[NetStack.scala 34:25]
+      led_lo <= 1'h0; // @[NetStack.scala 34:25]
+    end else if (done_wrap_wrap) begin // @[NetStack.scala 36:17]
+      led_lo <= ~led_lo; // @[NetStack.scala 36:26]
     end
     if (reset) begin // @[Counter.scala 60:40]
       done_value <= 26'h0; // @[Counter.scala 60:40]

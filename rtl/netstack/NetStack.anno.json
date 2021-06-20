@@ -24,30 +24,48 @@
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|NetStack>rgmii_rxData",
+    "target":"~NetStack|MacReceive>io_debugPort_rxValid",
     "description":"mark_debug = \"true\""
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|NetStack>rgmii_rxData"
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|NetStack>rgmii_rxCtrl",
+    "target":"~NetStack|MacReceive>io_debugPort_rxData",
     "description":"mark_debug = \"true\""
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|NetStack>rgmii_rxCtrl"
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|NetStack>rgmii_rxClock",
+    "target":"~NetStack|MacReceive>io_debugPort_state",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_cnt",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macType",
     "description":"mark_debug = \"true\""
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|NetStack>rgmii_rxClock"
+    "target":"~NetStack|MacReceive>io_debugPort_rxValid"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_rxData"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_state"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_cnt"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macType"
   },
   {
     "class":"firrtl.transforms.BlackBoxTargetDirAnno",

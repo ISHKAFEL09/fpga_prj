@@ -54,5 +54,7 @@ package object netstack {
 
   val MaxBytesPerPkg = 1500
   val MinBytesPerPkg = 46
-  val MacAddress = "hFF00_1234_55AA".U
+  val MacPreamble = Array.fill(7)("h55") ++ Array("hd5")
+  val MacBroadcast = Array.fill(6)("hFF")
+  val MacAddress = Array("h12", "h34", "h55", "hAA", "hFF", "h00")
 }
