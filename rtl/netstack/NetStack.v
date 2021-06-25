@@ -157,56 +157,56 @@ module MacReceive(
   wire  _T = 4'h0 == stateReg; // @[Conditional.scala 37:30]
   wire  wrap = cnt_value == 11'h5db; // @[Counter.scala 72:24]
   wire [10:0] _value_T_1 = cnt_value + 11'h1; // @[Counter.scala 76:24]
-  wire [10:0] _GEN_0 = wrap ? 11'h0 : _value_T_1; // @[Counter.scala 86:20 Counter.scala 86:28 Counter.scala 76:15]
+  wire [10:0] _GEN_9 = wrap ? 11'h0 : _value_T_1; // @[Counter.scala 86:20 Counter.scala 86:28 Counter.scala 76:15]
   wire  _T_3 = 4'h1 == stateReg; // @[Conditional.scala 37:30]
-  wire [7:0] _GEN_10 = 3'h7 == cnt_value[2:0] ? 8'hd5 : 8'h55; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
-  wire [10:0] _GEN_12 = io_rx_valid & io_rx_bits == _GEN_10 ? _GEN_0 : 11'h0; // @[MacReceive.scala 41:80 Counter.scala 97:11]
-  wire [3:0] _GEN_13 = io_rx_valid & io_rx_bits == _GEN_10 ? stateReg : 4'h0; // @[MacReceive.scala 41:80 MacReceive.scala 36:25 MacReceive.scala 45:16]
+  wire [7:0] _GEN_20 = 3'h7 == cnt_value[2:0] ? 8'hd5 : 8'h55; // @[MacReceive.scala 70:46 MacReceive.scala 70:46]
+  wire [10:0] _GEN_22 = io_rx_valid & io_rx_bits == _GEN_20 ? _GEN_9 : 11'h0; // @[MacReceive.scala 70:80 Counter.scala 97:11]
+  wire [3:0] _GEN_23 = io_rx_valid & io_rx_bits == _GEN_20 ? stateReg : 4'h0; // @[MacReceive.scala 70:80 MacReceive.scala 36:25 MacReceive.scala 74:16]
   wire  _T_8 = 4'h2 == stateReg; // @[Conditional.scala 37:30]
-  wire [7:0] _GEN_17 = 3'h1 == cnt_value[2:0] ? 8'h34 : 8'h12; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
-  wire [7:0] _GEN_18 = 3'h2 == cnt_value[2:0] ? 8'h55 : _GEN_17; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
-  wire [7:0] _GEN_19 = 3'h3 == cnt_value[2:0] ? 8'haa : _GEN_18; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
-  wire [7:0] _GEN_20 = 3'h4 == cnt_value[2:0] ? 8'hff : _GEN_19; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
-  wire [7:0] _GEN_21 = 3'h5 == cnt_value[2:0] ? 8'h0 : _GEN_20; // @[MacReceive.scala 41:46 MacReceive.scala 41:46]
-  wire [10:0] _GEN_29 = io_rx_valid & (io_rx_bits == _GEN_21 | io_rx_bits == 8'hff) ? _GEN_0 : 11'h0; // @[MacReceive.scala 41:80 Counter.scala 97:11]
-  wire [3:0] _GEN_30 = io_rx_valid & (io_rx_bits == _GEN_21 | io_rx_bits == 8'hff) ? stateReg : 4'h0; // @[MacReceive.scala 41:80 MacReceive.scala 36:25 MacReceive.scala 45:16]
-  wire  _T_15 = cnt_value == 11'h5; // @[MacReceive.scala 47:21]
-  wire [10:0] _GEN_31 = cnt_value == 11'h5 ? 11'h0 : _GEN_29; // @[MacReceive.scala 47:38 Counter.scala 97:11]
-  wire [3:0] _GEN_32 = cnt_value == 11'h5 ? 4'h3 : _GEN_30; // @[MacReceive.scala 47:38 MacReceive.scala 49:16]
+  wire [7:0] _GEN_28 = 3'h1 == cnt_value[2:0] ? 8'h34 : 8'h12; // @[MacReceive.scala 70:46 MacReceive.scala 70:46]
+  wire [7:0] _GEN_29 = 3'h2 == cnt_value[2:0] ? 8'h55 : _GEN_28; // @[MacReceive.scala 70:46 MacReceive.scala 70:46]
+  wire [7:0] _GEN_30 = 3'h3 == cnt_value[2:0] ? 8'haa : _GEN_29; // @[MacReceive.scala 70:46 MacReceive.scala 70:46]
+  wire [7:0] _GEN_31 = 3'h4 == cnt_value[2:0] ? 8'hff : _GEN_30; // @[MacReceive.scala 70:46 MacReceive.scala 70:46]
+  wire [7:0] _GEN_32 = 3'h5 == cnt_value[2:0] ? 8'h0 : _GEN_31; // @[MacReceive.scala 70:46 MacReceive.scala 70:46]
+  wire [10:0] _GEN_40 = io_rx_valid & (io_rx_bits == _GEN_32 | io_rx_bits == 8'hff) ? _GEN_9 : 11'h0; // @[MacReceive.scala 70:80 Counter.scala 97:11]
+  wire [3:0] _GEN_41 = io_rx_valid & (io_rx_bits == _GEN_32 | io_rx_bits == 8'hff) ? stateReg : 4'h0; // @[MacReceive.scala 70:80 MacReceive.scala 36:25 MacReceive.scala 74:16]
+  wire  _T_15 = cnt_value == 11'h5; // @[MacReceive.scala 76:21]
+  wire [10:0] _GEN_42 = cnt_value == 11'h5 ? 11'h0 : _GEN_40; // @[MacReceive.scala 76:38 Counter.scala 97:11]
+  wire [3:0] _GEN_44 = cnt_value == 11'h5 ? 4'h3 : _GEN_41; // @[MacReceive.scala 76:38 MacReceive.scala 79:16]
   wire  _T_16 = 4'h3 == stateReg; // @[Conditional.scala 37:30]
-  wire [10:0] _GEN_34 = _T_15 ? 11'h0 : _GEN_0; // @[MacReceive.scala 75:39 Counter.scala 97:11]
-  wire [3:0] _GEN_35 = _T_15 ? 4'h4 : stateReg; // @[MacReceive.scala 75:39 MacReceive.scala 77:20 MacReceive.scala 36:25]
-  wire [10:0] _GEN_36 = io_rx_valid ? _GEN_34 : 11'h0; // @[MacReceive.scala 73:21 Counter.scala 97:11]
-  wire [3:0] _GEN_37 = io_rx_valid ? _GEN_35 : 4'h0; // @[MacReceive.scala 73:21 MacReceive.scala 81:18]
+  wire [10:0] _GEN_46 = _T_15 ? 11'h0 : _GEN_9; // @[MacReceive.scala 106:39 Counter.scala 97:11]
+  wire [3:0] _GEN_48 = _T_15 ? 4'h4 : stateReg; // @[MacReceive.scala 106:39 MacReceive.scala 109:20 MacReceive.scala 36:25]
+  wire [10:0] _GEN_49 = io_rx_valid ? _GEN_46 : 11'h0; // @[MacReceive.scala 104:21 Counter.scala 97:11]
+  wire [3:0] _GEN_51 = io_rx_valid ? _GEN_48 : 4'h0; // @[MacReceive.scala 104:21 MacReceive.scala 113:18]
   wire  _T_18 = 4'h4 == stateReg; // @[Conditional.scala 37:30]
-  wire [7:0] _GEN_38 = io_rx_valid & 11'h0 == cnt_value ? io_rx_bits : macType_1; // @[MacReceive.scala 55:42 MacReceive.scala 56:33 MacReceive.scala 31:20]
-  wire [7:0] _GEN_39 = io_rx_valid & 11'h1 == cnt_value ? io_rx_bits : macType_0; // @[MacReceive.scala 55:42 MacReceive.scala 56:33 MacReceive.scala 31:20]
-  wire [10:0] _GEN_41 = cnt_value == 11'h1 ? 11'h0 : _GEN_0; // @[MacReceive.scala 61:44 Counter.scala 97:11]
-  wire [3:0] _GEN_42 = cnt_value == 11'h1 ? 4'h5 : stateReg; // @[MacReceive.scala 61:44 MacReceive.scala 63:18 MacReceive.scala 36:25]
-  wire [10:0] _GEN_43 = io_rx_valid ? _GEN_41 : 11'h0; // @[MacReceive.scala 59:20 Counter.scala 97:11]
-  wire [3:0] _GEN_44 = io_rx_valid ? _GEN_42 : 4'h0; // @[MacReceive.scala 59:20 MacReceive.scala 67:16]
+  wire [7:0] _GEN_52 = io_rx_valid & 11'h0 == cnt_value ? io_rx_bits : macType_1; // @[MacReceive.scala 85:42 MacReceive.scala 86:33 MacReceive.scala 31:20]
+  wire [7:0] _GEN_53 = io_rx_valid & 11'h1 == cnt_value ? io_rx_bits : macType_0; // @[MacReceive.scala 85:42 MacReceive.scala 86:33 MacReceive.scala 31:20]
+  wire [10:0] _GEN_55 = cnt_value == 11'h1 ? 11'h0 : _GEN_9; // @[MacReceive.scala 91:44 Counter.scala 97:11]
+  wire [3:0] _GEN_57 = cnt_value == 11'h1 ? 4'h5 : stateReg; // @[MacReceive.scala 91:44 MacReceive.scala 94:18 MacReceive.scala 36:25]
+  wire [10:0] _GEN_58 = io_rx_valid ? _GEN_55 : 11'h0; // @[MacReceive.scala 89:20 Counter.scala 97:11]
+  wire [3:0] _GEN_60 = io_rx_valid ? _GEN_57 : 4'h0; // @[MacReceive.scala 89:20 MacReceive.scala 98:16]
   wire  _T_24 = 4'h5 == stateReg; // @[Conditional.scala 37:30]
-  wire [3:0] _GEN_45 = ~io_rx_valid ? 4'h6 : stateReg; // @[MacReceive.scala 84:23 MacReceive.scala 84:34 MacReceive.scala 36:25]
+  wire [3:0] _GEN_62 = ~io_rx_valid ? 4'h6 : stateReg; // @[MacReceive.scala 116:23 MacReceive.scala 118:18 MacReceive.scala 36:25]
   wire  _T_26 = 4'h6 == stateReg; // @[Conditional.scala 37:30]
-  wire [3:0] _GEN_46 = _T_26 ? 4'h0 : stateReg; // @[Conditional.scala 39:67 MacReceive.scala 111:16 MacReceive.scala 36:25]
-  wire [3:0] _GEN_47 = _T_24 ? _GEN_45 : _GEN_46; // @[Conditional.scala 39:67]
-  wire [7:0] _GEN_48 = _T_18 ? _GEN_38 : macType_1; // @[Conditional.scala 39:67 MacReceive.scala 31:20]
-  wire [7:0] _GEN_49 = _T_18 ? _GEN_39 : macType_0; // @[Conditional.scala 39:67 MacReceive.scala 31:20]
-  wire [10:0] _GEN_50 = _T_18 ? _GEN_43 : cnt_value; // @[Conditional.scala 39:67 Counter.scala 60:40]
-  wire [3:0] _GEN_51 = _T_18 ? _GEN_44 : _GEN_47; // @[Conditional.scala 39:67]
-  wire [10:0] _GEN_52 = _T_16 ? _GEN_36 : _GEN_50; // @[Conditional.scala 39:67]
-  wire [3:0] _GEN_53 = _T_16 ? _GEN_37 : _GEN_51; // @[Conditional.scala 39:67]
-  assign io_debugPort_rxValid = io_rx_valid; // @[MacReceive.scala 117:24]
-  assign io_debugPort_rxData = io_rx_bits; // @[MacReceive.scala 118:23]
-  assign io_debugPort_state = {{4'd0}, stateReg}; // @[MacReceive.scala 115:22]
-  assign io_debugPort_cnt = cnt_value[7:0]; // @[MacReceive.scala 116:20]
-  assign io_debugPort_macType = {macType_1,macType_0}; // @[MacReceive.scala 119:43]
+  wire [3:0] _GEN_63 = _T_26 ? 4'h0 : stateReg; // @[Conditional.scala 39:67 MacReceive.scala 147:16 MacReceive.scala 36:25]
+  wire [3:0] _GEN_65 = _T_24 ? _GEN_62 : _GEN_63; // @[Conditional.scala 39:67]
+  wire [7:0] _GEN_66 = _T_18 ? _GEN_52 : macType_1; // @[Conditional.scala 39:67 MacReceive.scala 31:20]
+  wire [7:0] _GEN_67 = _T_18 ? _GEN_53 : macType_0; // @[Conditional.scala 39:67 MacReceive.scala 31:20]
+  wire [10:0] _GEN_68 = _T_18 ? _GEN_58 : cnt_value; // @[Conditional.scala 39:67 Counter.scala 60:40]
+  wire [3:0] _GEN_70 = _T_18 ? _GEN_60 : _GEN_65; // @[Conditional.scala 39:67]
+  wire [10:0] _GEN_71 = _T_16 ? _GEN_49 : _GEN_68; // @[Conditional.scala 39:67]
+  wire [3:0] _GEN_73 = _T_16 ? _GEN_51 : _GEN_70; // @[Conditional.scala 39:67]
+  assign io_debugPort_rxValid = io_rx_valid; // @[MacReceive.scala 166:24]
+  assign io_debugPort_rxData = io_rx_bits; // @[MacReceive.scala 167:23]
+  assign io_debugPort_state = {{4'd0}, stateReg}; // @[MacReceive.scala 164:22]
+  assign io_debugPort_cnt = cnt_value[7:0]; // @[MacReceive.scala 165:20]
+  assign io_debugPort_macType = {macType_1,macType_0}; // @[MacReceive.scala 168:43]
   always @(posedge clock) begin
     if (!(_T)) begin // @[Conditional.scala 40:58]
       if (!(_T_3)) begin // @[Conditional.scala 39:67]
         if (!(_T_8)) begin // @[Conditional.scala 39:67]
           if (!(_T_16)) begin // @[Conditional.scala 39:67]
-            macType_0 <= _GEN_49;
+            macType_0 <= _GEN_67;
           end
         end
       end
@@ -215,7 +215,7 @@ module MacReceive(
       if (!(_T_3)) begin // @[Conditional.scala 39:67]
         if (!(_T_8)) begin // @[Conditional.scala 39:67]
           if (!(_T_16)) begin // @[Conditional.scala 39:67]
-            macType_1 <= _GEN_48;
+            macType_1 <= _GEN_66;
           end
         end
       end
@@ -223,7 +223,7 @@ module MacReceive(
     if (reset) begin // @[Counter.scala 60:40]
       cnt_value <= 11'h0; // @[Counter.scala 60:40]
     end else if (_T) begin // @[Conditional.scala 40:58]
-      if (io_rx_valid & io_rx_bits == 8'h55) begin // @[MacReceive.scala 90:48]
+      if (io_rx_valid & io_rx_bits == 8'h55) begin // @[MacReceive.scala 125:48]
         if (wrap) begin // @[Counter.scala 86:20]
           cnt_value <= 11'h0; // @[Counter.scala 86:28]
         end else begin
@@ -231,32 +231,32 @@ module MacReceive(
         end
       end
     end else if (_T_3) begin // @[Conditional.scala 39:67]
-      if (cnt_value == 11'h7) begin // @[MacReceive.scala 47:38]
+      if (cnt_value == 11'h7) begin // @[MacReceive.scala 76:38]
         cnt_value <= 11'h0; // @[Counter.scala 97:11]
       end else begin
-        cnt_value <= _GEN_12;
+        cnt_value <= _GEN_22;
       end
     end else if (_T_8) begin // @[Conditional.scala 39:67]
-      cnt_value <= _GEN_31;
+      cnt_value <= _GEN_42;
     end else begin
-      cnt_value <= _GEN_52;
+      cnt_value <= _GEN_71;
     end
     if (reset) begin // @[MacReceive.scala 36:25]
       stateReg <= 4'h0; // @[MacReceive.scala 36:25]
     end else if (_T) begin // @[Conditional.scala 40:58]
-      if (io_rx_valid & io_rx_bits == 8'h55) begin // @[MacReceive.scala 90:48]
-        stateReg <= 4'h1; // @[MacReceive.scala 92:18]
+      if (io_rx_valid & io_rx_bits == 8'h55) begin // @[MacReceive.scala 125:48]
+        stateReg <= 4'h1; // @[MacReceive.scala 128:18]
       end
     end else if (_T_3) begin // @[Conditional.scala 39:67]
-      if (cnt_value == 11'h7) begin // @[MacReceive.scala 47:38]
-        stateReg <= 4'h2; // @[MacReceive.scala 49:16]
+      if (cnt_value == 11'h7) begin // @[MacReceive.scala 76:38]
+        stateReg <= 4'h2; // @[MacReceive.scala 79:16]
       end else begin
-        stateReg <= _GEN_13;
+        stateReg <= _GEN_23;
       end
     end else if (_T_8) begin // @[Conditional.scala 39:67]
-      stateReg <= _GEN_32;
+      stateReg <= _GEN_44;
     end else begin
-      stateReg <= _GEN_53;
+      stateReg <= _GEN_73;
     end
   end
 // Register and memory initialization

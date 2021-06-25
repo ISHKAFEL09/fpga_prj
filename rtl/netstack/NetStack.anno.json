@@ -10,13 +10,13 @@
     "class":"firrtl.transforms.DedupedResult",
     "original":"~NetStack|FpgaFifo",
     "duplicate":"~NetStack|NetStack/rgmiiTransfer:RgmiiTransfer/topHalfFifo:FpgaFifo",
-    "index":0.2
+    "index":0.16666666666666666
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~NetStack|FpgaFifo_1",
     "duplicate":"~NetStack|NetStack/rgmiiTransfer:RgmiiTransfer/bottomHalfFifo:FpgaFifo",
-    "index":0.4
+    "index":0.3333333333333333
   },
   {
     "class":"firrtl.EmitCircuitAnnotation",
