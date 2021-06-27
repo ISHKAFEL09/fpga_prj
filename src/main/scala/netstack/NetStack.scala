@@ -26,6 +26,7 @@ case class NetStack() extends FpgaBasic {
     rgmiiTransfer.io.rx <> macReceive.io.rx
     //    rgmiiTransfer.io.tx <> txMac
 
+    debug(rgmiiTransfer.io.debugPort)
     debug(macReceive.io.debugPort)
   }
 

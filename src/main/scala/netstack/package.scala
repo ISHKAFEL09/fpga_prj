@@ -24,7 +24,7 @@ package object netstack {
 
   class FpgaFifo(width: Int) extends BlackBox {
     val io = IO(new Bundle() {
-//      val rst = Input(Reset())
+      val rst = Input(Reset())
       val wr_clk = Input(Clock())
       val rd_clk = Input(Clock())
       val din = Input(UInt(width.W))
@@ -32,9 +32,9 @@ package object netstack {
       val rd_en = Input(Bool())
       val dout = Output(UInt(width.W))
       val full = Output(Bool())
-      val almost_full = Output(Bool())
+//      val almost_full = Output(Bool())
       val empty = Output(Bool())
-      val almost_empty = Output(Bool())
+//      val almost_empty = Output(Bool())
 //      val wr_rst_busy = Output(Bool())
 //      val rd_rst_busy = Output(Bool())
     })

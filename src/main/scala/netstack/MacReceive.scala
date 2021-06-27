@@ -11,6 +11,12 @@ case class MacDebugPort() extends Bundle {
   val state = UInt(8.W)
   val cnt = UInt(8.W)
   val macType = UInt(16.W)
+  val macWriteEnable = Bool()
+  val macWriteAddress = UInt(12.W)
+  val macWriteData = UInt(8.W)
+  val fifoValid = Bool()
+  val fifoStart = UInt(12.W)
+  val fifoEnd = UInt(12.W)
 }
 
 @chiselName
@@ -166,4 +172,10 @@ case class MacReceive() extends Module {
   io.debugPort.rxValid := io.rx.valid
   io.debugPort.rxData := io.rx.bits
   io.debugPort.macType := macType.asTypeOf(UInt(16.W))
+  io.debugPort.macWriteEnable := macDataWriteEnable
+  io.debugPort.macWriteAddress := macDataWriteAddress
+  io.debugPort.macWriteData := macDataWriteData
+  io.debugPort.fifoValid := inMetaFifoIf.valid
+  io.debugPort.fifoStart := inStartAddress
+  io.debugPort.fifoEnd := inEndAddress
 }

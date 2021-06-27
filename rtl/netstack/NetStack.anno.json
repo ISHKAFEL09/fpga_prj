@@ -48,6 +48,36 @@
     "description":"mark_debug = \"true\""
   },
   {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteEnable",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteAddress",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteData",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoValid",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoStart",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoEnd",
+    "description":"mark_debug = \"true\""
+  },
+  {
     "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~NetStack|MacReceive>io_debugPort_rxValid"
   },
@@ -66,6 +96,75 @@
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~NetStack|MacReceive>io_debugPort_macType"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteEnable"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteAddress"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteData"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoValid"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoStart"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoEnd"
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxClock",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxCtrl",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxData",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|RgmiiTransfer>io_debugPort_rxValid",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|RgmiiTransfer>io_debugPort_rxData",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxClock"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxCtrl"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxData"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|RgmiiTransfer>io_debugPort_rxValid"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|RgmiiTransfer>io_debugPort_rxData"
   },
   {
     "class":"firrtl.transforms.BlackBoxTargetDirAnno",
