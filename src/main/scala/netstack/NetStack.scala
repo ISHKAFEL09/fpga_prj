@@ -15,7 +15,7 @@ case class NetStack() extends FpgaBasic {
 
   rgmii := DontCare
 
-  withClockAndReset(pll.io.clk_125, reset) {
+  withClockAndReset(pll.io.clk_125, reset.asAsyncReset()) {
     val rgmiiTransfer = Module(RgmiiTransfer())
     val macReceive = Module(MacReceive())
 
@@ -26,12 +26,12 @@ case class NetStack() extends FpgaBasic {
     rgmiiTransfer.io.rx <> macReceive.io.rx
     //    rgmiiTransfer.io.tx <> txMac
 
-    debug(rgmiiTransfer.io.debugPort)
+//    debug(rgmiiTransfer.io.debugPort)
     debug(macReceive.io.debugPort)
   }
 
   rgmii.ereset := reset_n
-  withClockAndReset(pll.io.clk_100, reset) {
+  withClockAndReset(pll.io.clk_100, reset.asAsyncReset()) {
     val ledReg = RegInit(false.B)
     val (_, done) = Counter(true.B, 50 * 1000 * 1000)
     when (done) { ledReg := !ledReg }

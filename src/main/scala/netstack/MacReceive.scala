@@ -14,9 +14,19 @@ case class MacDebugPort() extends Bundle {
   val macWriteEnable = Bool()
   val macWriteAddress = UInt(12.W)
   val macWriteData = UInt(8.W)
-  val fifoValid = Bool()
-  val fifoStart = UInt(12.W)
-  val fifoEnd = UInt(12.W)
+  val macReadEnable = Bool()
+  val macReadAddress = UInt(12.W)
+  val macReadData = UInt(8.W)
+  val arpTxValid = Bool()
+  val arpTxData = UInt(8.W)
+  val ipTxValid = Bool()
+  val ipTxData = UInt(8.W)
+  val fifoInValid = Bool()
+  val fifoInStart = UInt(12.W)
+  val fifoInEnd = UInt(12.W)
+  val fifoOutFire = Bool()
+  val fifoOutStart = UInt(12.W)
+  val fifoOutEnd = UInt(12.W)
 }
 
 @chiselName
@@ -39,7 +49,7 @@ case class MacReceive() extends Module {
   val rxValid = io.rx.valid
   val cnt = Counter(MaxBytesPerPkg)
   val sIdle :: sPreamble :: sDestMac :: sSrcMac :: sType :: sData :: sDone :: _ = Enum(10)
-  val stateReg = RegInit(sIdle)
+  val inStateReg = RegInit(sIdle)
   val stateShift = Wire(Bool())
   stateShift := false.B
 
@@ -57,9 +67,9 @@ case class MacReceive() extends Module {
   macDataWriteData := io.rx.bits
 
   case class MetaFifoIf() extends Bundle {
+    val info = UInt(8.W)
     val startAddress = UInt(12.W)
     val endAddress = UInt(12.W)
-    val info = UInt(8.W)
   }
 
   val inMetaFifoIf = Wire(Flipped(DecoupledIO(MetaFifoIf())))
@@ -68,7 +78,9 @@ case class MacReceive() extends Module {
   val inEndAddress = RegInit(0.U(12.W))
   inMetaFifoIf.valid := false.B
   inMetaFifoIf.bits := Cat(0.U, inStartAddress, inEndAddress).asTypeOf(MetaFifoIf())
-  metaFifo.ready := true.B
+  val metaInfo = metaFifo.bits.asTypeOf(MetaFifoIf())
+  val outStartAddress = RegEnable(metaInfo.startAddress, metaFifo.fire())
+  val outEndAddress = RegEnable(metaInfo.endAddress, metaFifo.fire())
 
   def parser(pattern: Array[Vec[UInt]], nextState: UInt) = {
     val len = pattern(0).length
@@ -77,12 +89,12 @@ case class MacReceive() extends Module {
       cnt.inc()
     } otherwise {
       cnt.reset()
-      stateReg := sIdle
+      inStateReg := sIdle
     }
     when (cnt.value === (len - 1).U) {
       cnt.reset()
       stateShift := true.B
-      stateReg := nextState
+      inStateReg := nextState
     }
   }
 
@@ -97,11 +109,11 @@ case class MacReceive() extends Module {
       when(cnt.value === (d.length - 1).U) {
         cnt.reset()
         stateShift := true.B
-        stateReg := nextState
+        inStateReg := nextState
       }
     } otherwise {
       cnt.reset()
-      stateReg := sIdle
+      inStateReg := sIdle
     }
   }
 
@@ -112,26 +124,26 @@ case class MacReceive() extends Module {
         when(cnt.value === (i - 1).U) {
           cnt.reset()
           stateShift := true.B
-          stateReg := nextSate
+          inStateReg := nextSate
         }
       } otherwise {
         cnt.reset()
-        stateReg := sIdle
+        inStateReg := sIdle
       }
     } else {
       when (!rxValid) {
         stateShift := true.B
-        stateReg := nextSate
+        inStateReg := nextSate
       }
     }
   }
 
-  switch (stateReg) {
+  switch (inStateReg) {
     is (sIdle) {
       when (rxValid && rxData === preamble(0)) {
         cnt.inc()
         stateShift := true.B
-        stateReg := sPreamble
+        inStateReg := sPreamble
       }
     }
     is (sPreamble) {
@@ -150,24 +162,53 @@ case class MacReceive() extends Module {
       idleReceive(0, sDone)
     }
     is (sDone) {
-      stateReg := sIdle
+      inStateReg := sIdle
     }
   }
 
-  when (stateReg === sType && stateShift) {
+  when (inStateReg === sType && stateShift) {
     macDataWriteAddress := inEndAddress
     inStartAddress := inEndAddress
   }
-  when (stateReg === sData) {
-    macDataWriteEnable := true.B
+  when (inStateReg === sData) {
     macDataWriteAddress := macDataWriteAddress + 1.U
     when (stateShift) { inEndAddress := macDataWriteAddress }
   }
-  when (stateReg === sDone) {
+  when (inStateReg === sDone) {
     inMetaFifoIf.valid := true.B
   }
 
-  io.debugPort.state := stateReg
+  macDataWriteEnable := inStateReg === sData && io.rx.valid
+
+  val oIdle :: oSend :: oDone :: _ = Enum(5)
+  val outStateReg = RegInit(oIdle)
+  switch (outStateReg) {
+    is (oIdle) {
+      when (metaFifo.fire()) {
+        outStateReg := oSend
+        macDataReadAddress := metaInfo.startAddress
+      }
+    }
+    is (oSend) {
+      macDataReadAddress := macDataReadAddress + 1.U
+      when (macDataReadAddress === outEndAddress) {
+        outStateReg := oDone
+      }
+    }
+    is (oDone) {
+      outStateReg := oIdle
+    }
+  }
+
+  metaFifo.ready := outStateReg === oIdle
+  macDataReadEnable := outStateReg === oSend
+
+  io.mac2IpIf.arpData.bits := macDataReadData
+  io.mac2IpIf.arpData.valid := RegNext(outStateReg === oSend && macType.asUInt() === MacTypeArp)
+  io.mac2IpIf.ipData.bits := macDataReadData
+  io.mac2IpIf.ipData.valid := RegNext(outStateReg === oSend && macType.asUInt() === MacTypeIp)
+
+  io.debugPort.state := inStateReg
   io.debugPort.cnt := cnt.value
   io.debugPort.rxValid := io.rx.valid
   io.debugPort.rxData := io.rx.bits
@@ -175,7 +216,17 @@ case class MacReceive() extends Module {
   io.debugPort.macWriteEnable := macDataWriteEnable
   io.debugPort.macWriteAddress := macDataWriteAddress
   io.debugPort.macWriteData := macDataWriteData
-  io.debugPort.fifoValid := inMetaFifoIf.valid
-  io.debugPort.fifoStart := inStartAddress
-  io.debugPort.fifoEnd := inEndAddress
+  io.debugPort.fifoInValid := inMetaFifoIf.valid
+  io.debugPort.fifoInStart := inStartAddress
+  io.debugPort.fifoInEnd := inEndAddress
+  io.debugPort.macReadEnable := macDataReadEnable
+  io.debugPort.macReadAddress := macDataReadAddress
+  io.debugPort.macReadData := macDataReadData
+  io.debugPort.fifoOutFire := metaFifo.fire()
+  io.debugPort.fifoOutStart := metaInfo.startAddress
+  io.debugPort.fifoOutEnd := metaInfo.endAddress
+  io.debugPort.arpTxValid := io.mac2IpIf.arpData.valid
+  io.debugPort.arpTxData := io.mac2IpIf.arpData.bits
+  io.debugPort.ipTxValid := io.mac2IpIf.ipData.valid
+  io.debugPort.ipTxData := io.mac2IpIf.ipData.bits
 }

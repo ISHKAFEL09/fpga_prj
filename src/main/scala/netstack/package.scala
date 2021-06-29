@@ -52,9 +52,23 @@ package object netstack {
     })
   }
 
+  class FpgaPhasePll extends BlackBox {
+    val io = IO(new Bundle() {
+      val clk_in = Input(Clock())
+      val reset = Input(Reset())
+      val clk_p45 = Output(Clock())
+      val clk_p90 = Output(Clock())
+      val clk_p180 = Output(Clock())
+      val clk_p225 = Output(Clock())
+      val clk_p270 = Output(Clock())
+    })
+  }
+
   val MaxBytesPerPkg = 1500
   val MinBytesPerPkg = 46
   val MacPreamble = Array.fill(7)("h55") ++ Array("hd5")
   val MacBroadcast = Array.fill(6)("hFF")
   val MacAddress = Array("h12", "h34", "h55", "hAA", "hFF", "h00")
+  val MacTypeArp = "h0806".U
+  val MacTypeIp = "h0800".U
 }
