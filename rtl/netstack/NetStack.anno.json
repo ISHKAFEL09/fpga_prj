@@ -24,66 +24,192 @@
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxClock",
+    "target":"~NetStack|MacReceive>io_debugPort_rxValid",
     "description":"mark_debug = \"true\""
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxCtrl",
+    "target":"~NetStack|MacReceive>io_debugPort_rxData",
     "description":"mark_debug = \"true\""
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxData",
+    "target":"~NetStack|MacReceive>io_debugPort_state",
     "description":"mark_debug = \"true\""
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_rxValid",
+    "target":"~NetStack|MacReceive>io_debugPort_cnt",
     "description":"mark_debug = \"true\""
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_rxData",
+    "target":"~NetStack|MacReceive>io_debugPort_macType",
     "description":"mark_debug = \"true\""
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_riseFifo",
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteEnable",
     "description":"mark_debug = \"true\""
   },
   {
     "class":"firrtl.AttributeAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_fallFifo",
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteAddress",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteData",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macReadEnable",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macReadAddress",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macReadData",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_arpTxValid",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_arpTxData",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_ipTxValid",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_ipTxData",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoInValid",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoInStart",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoInEnd",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoOutFire",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoOutStart",
+    "description":"mark_debug = \"true\""
+  },
+  {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoOutEnd",
     "description":"mark_debug = \"true\""
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxClock"
+    "target":"~NetStack|MacReceive>io_debugPort_rxValid"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxCtrl"
+    "target":"~NetStack|MacReceive>io_debugPort_rxData"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_rgmiiRxData"
+    "target":"~NetStack|MacReceive>io_debugPort_state"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_rxValid"
+    "target":"~NetStack|MacReceive>io_debugPort_cnt"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_rxData"
+    "target":"~NetStack|MacReceive>io_debugPort_macType"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_riseFifo"
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteEnable"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~NetStack|RgmiiTransfer>io_debugPort_fallFifo"
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteAddress"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macWriteData"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macReadEnable"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macReadAddress"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_macReadData"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_arpTxValid"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_arpTxData"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_ipTxValid"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_ipTxData"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoInValid"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoInStart"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoInEnd"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoOutFire"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoOutStart"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|MacReceive>io_debugPort_fifoOutEnd"
   },
   {
     "class":"firrtl.transforms.BlackBoxTargetDirAnno",

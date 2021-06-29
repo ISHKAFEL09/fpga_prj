@@ -167,16 +167,19 @@ case class MacReceive() extends Module {
   }
 
   when (inStateReg === sType && stateShift) {
-    macDataWriteAddress := inEndAddress
-    inStartAddress := inEndAddress
+    macDataWriteAddress := inEndAddress + 1.U
+    inStartAddress := inEndAddress + 1.U
   }
   when (inStateReg === sData) {
     macDataWriteAddress := macDataWriteAddress + 1.U
-    when (stateShift) { inEndAddress := macDataWriteAddress }
+    when (stateShift) { inEndAddress := macDataWriteAddress - 1.U}
   }
   when (inStateReg === sDone) {
     inMetaFifoIf.valid := true.B
   }
+
+  // todo for test
+  when (macType.asUInt() === MacTypeIp) { inMetaFifoIf.valid := false.B }
 
   macDataWriteEnable := inStateReg === sData && io.rx.valid
 
