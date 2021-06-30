@@ -1,5 +1,6 @@
 import chisel3._
 import chisel3.experimental._
+import chisel3.util._
 import firrtl.AttributeAnnotation
 import firrtl.annotations.Annotation
 import firrtl.transforms.DontTouchAnnotation
@@ -63,6 +64,71 @@ package object netstack {
       val clk_p270 = Output(Clock())
     })
   }
+  
+  trait NetStream {
+    val cnt: Counter
+    val vd: ValidIO[UInt]
+    val st: UInt
+    val idle: UInt
+    val ss: Bool
+
+    def parser(pattern: Array[Vec[UInt]], nextState: UInt) = {
+      val len = pattern(0).length
+      pattern.foreach(i => assert(i.length == len))
+      when (vd.valid && pattern.map(i => vd.bits === i(cnt.value)).reduce(_ || _)) {
+        cnt.inc()
+      } otherwise {
+        cnt.reset()
+        st := idle
+      }
+      when (cnt.value === (len - 1).U) {
+        cnt.reset()
+        ss := true.B
+        st := nextState
+      }
+    }
+
+    def getData(d: Vec[UInt], nextState: UInt) = {
+      for (i <- 0 until d.length) {
+        when(vd.valid && i.U === cnt.value) {
+          d((d.length - i - 1).U) := vd.bits
+        }
+      }
+      when (vd.valid) {
+        cnt.inc()
+        when(cnt.value === (d.length - 1).U) {
+          cnt.reset()
+          ss := true.B
+          st := nextState
+        }
+      } otherwise {
+        cnt.reset()
+        st := idle
+      }
+    }
+
+    def idleReceive(i: Int, nextSate: UInt): Unit = {
+      if (i != 0) {
+        when(vd.valid) {
+          cnt.inc()
+          when(cnt.value === (i - 1).U) {
+            cnt.reset()
+            ss := true.B
+            st := nextSate
+          }
+        } otherwise {
+          cnt.reset()
+          st := idle
+        }
+      } else {
+        when (!vd.valid) {
+          ss := true.B
+          st := nextSate
+        }
+      }
+    }
+
+  }
 
   val MaxBytesPerPkg = 1500
   val MinBytesPerPkg = 46
@@ -71,4 +137,6 @@ package object netstack {
   val MacAddress = Array("h12", "h34", "h55", "hAA", "hFF", "h00")
   val MacTypeArp = "h0806".U
   val MacTypeIp = "h0800".U
+  val ArpOpReq = "h1".U
+  val ArpOpResp = "h2".U
 }

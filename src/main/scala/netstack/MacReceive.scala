@@ -30,7 +30,7 @@ case class MacDebugPort() extends Bundle {
 }
 
 @chiselName
-case class MacReceive() extends Module {
+case class MacReceive() extends Module with NetStream {
   val io = IO(new Bundle() {
     val rx = Flipped(ValidIO(UInt(8.W)))
     val mac2IpIf = Mac2IpIf()
@@ -82,62 +82,12 @@ case class MacReceive() extends Module {
   val outStartAddress = RegEnable(metaInfo.startAddress, metaFifo.fire())
   val outEndAddress = RegEnable(metaInfo.endAddress, metaFifo.fire())
 
-  def parser(pattern: Array[Vec[UInt]], nextState: UInt) = {
-    val len = pattern(0).length
-    pattern.foreach(i => assert(i.length == len))
-    when (rxValid && pattern.map(i => rxData === i(cnt.value)).reduce(_ || _)) {
-      cnt.inc()
-    } otherwise {
-      cnt.reset()
-      inStateReg := sIdle
-    }
-    when (cnt.value === (len - 1).U) {
-      cnt.reset()
-      stateShift := true.B
-      inStateReg := nextState
-    }
-  }
+  override val vd: ValidIO[UInt] = io.rx
+  override val st: UInt = inStateReg
+  override val idle: UInt = sIdle
+  override val ss: Bool = stateShift
 
-  def getData(d: Vec[UInt], nextState: UInt) = {
-    for (i <- 0 until d.length) {
-      when(rxValid && i.U === cnt.value) {
-        d((d.length - i - 1).U) := rxData
-      }
-    }
-    when (rxValid) {
-      cnt.inc()
-      when(cnt.value === (d.length - 1).U) {
-        cnt.reset()
-        stateShift := true.B
-        inStateReg := nextState
-      }
-    } otherwise {
-      cnt.reset()
-      inStateReg := sIdle
-    }
-  }
-
-  def idleReceive(i: Int, nextSate: UInt): Unit = {
-    if (i != 0) {
-      when(rxValid) {
-        cnt.inc()
-        when(cnt.value === (i - 1).U) {
-          cnt.reset()
-          stateShift := true.B
-          inStateReg := nextSate
-        }
-      } otherwise {
-        cnt.reset()
-        inStateReg := sIdle
-      }
-    } else {
-      when (!rxValid) {
-        stateShift := true.B
-        inStateReg := nextSate
-      }
-    }
-  }
-
+  stateShift := false.B
   switch (inStateReg) {
     is (sIdle) {
       when (rxValid && rxData === preamble(0)) {
