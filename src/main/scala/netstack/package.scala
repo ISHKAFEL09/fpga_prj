@@ -64,8 +64,23 @@ package object netstack {
       val clk_p270 = Output(Clock())
     })
   }
-  
-  trait NetStream {
+
+  trait SendStream {
+    val sCnt: Counter
+    val sPort: DecoupledIO[UInt]
+    val sState: UInt
+
+    def sendData(d: Vec[UInt], nextState: UInt) = {
+      sPort.bits := d(sCnt.value)
+      sCnt.inc()
+      when (sCnt.value === (d.length - 1).U) {
+        sCnt.reset()
+        sState := nextState
+      }
+    }
+  }
+
+  trait ReceiveStream {
     val cnt: Counter
     val vd: ValidIO[UInt]
     val st: UInt
@@ -130,13 +145,30 @@ package object netstack {
 
   }
 
+  implicit def Uint2Vec(u: UInt): Vec[UInt] = {
+    val bytes = u.getWidth / 8
+    val v = Wire(Vec(bytes, UInt(8.W)))
+    for (i <- 0 until bytes) {
+      v(i) := u((bytes - i) * 8 - 1, (bytes - i - 1) * 8)
+    }
+    v
+  }
+
+  implicit def Array2Vec(a: Array[String]): Vec[UInt] = {
+    VecInit.tabulate(a.length)(a(_).U(8.W))
+  }
+
   val MaxBytesPerPkg = 1500
   val MinBytesPerPkg = 46
-  val MacPreamble = Array.fill(7)("h55") ++ Array("hd5")
+  val MacPreamble = "h55555555555555d5".U(64.W)//Array.fill(7)("h55") ++ Array("hd5")
   val MacBroadcast = Array.fill(6)("hFF")
   val MacAddress = Array("h12", "h34", "h55", "hAA", "hFF", "h00")
-  val MacTypeArp = "h0806".U
-  val MacTypeIp = "h0800".U
-  val ArpOpReq = "h1".U
-  val ArpOpResp = "h2".U
+  val MacTypeArp = "h0806".U(32.W)
+  val MacTypeIp = "h0800".U(32.W)
+
+  val ArpOpReq = "h1".U(16.W)
+  val ArpOpResp = "h2".U(16.W)
+  val ArpPreamble = Array("h00", "h01", "h08", "h00", "h06", "h04")
+
+  val IpAddress = Array("hAA", "hBB", "hCC", "hDD")
 }

@@ -28,4 +28,10 @@ object Interface {
     val crcDone = Input(Bool())
     val crcErr = Input(Bool())
   }
+
+  case class Ip2ArpIf() extends Bundle {
+    val queryReq = ValidIO(UInt(32.W))
+    val queryResp = Flipped(ValidIO(UInt(48.W)))
+    val sendReq = DecoupledIO(UInt(32.W))
+  }
 }

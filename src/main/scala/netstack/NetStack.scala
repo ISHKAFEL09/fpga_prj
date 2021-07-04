@@ -22,14 +22,16 @@ case class NetStack() extends FpgaBasic {
 
     rgmiiTransfer.io := DontCare
     macReceive.io := DontCare
+    arp.io := DontCare
 
     rgmiiTransfer.io.rgmii <> rgmii
     rgmiiTransfer.io.rx <> macReceive.io.rx
     macReceive.io.mac2IpIf.arpData <> arp.io.mac2Arp
     //    rgmiiTransfer.io.tx <> txMac
 
-    debug(rgmiiTransfer.io.debugPort)
-//    debug(macReceive.io.debugPort)
+//    debug(rgmiiTransfer.io.debugPort)
+    debug(macReceive.io.debugPort)
+    arp.io.arp2Mac.ready := true.B
     debug(arp.io.debugPort)
   }
 

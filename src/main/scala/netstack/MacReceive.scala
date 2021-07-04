@@ -30,7 +30,7 @@ case class MacDebugPort() extends Bundle {
 }
 
 @chiselName
-case class MacReceive() extends Module with NetStream {
+case class MacReceive() extends Module with ReceiveStream {
   val io = IO(new Bundle() {
     val rx = Flipped(ValidIO(UInt(8.W)))
     val mac2IpIf = Mac2IpIf()
@@ -39,10 +39,6 @@ case class MacReceive() extends Module with NetStream {
   })
 
   io := DontCare
-
-  final val preamble = VecInit.tabulate(MacPreamble.length)(MacPreamble(_).U)
-  final val macAddress = VecInit.tabulate(MacAddress.length)(MacAddress(_).U)
-  final val broadMacAddress = VecInit.tabulate(MacBroadcast.length)(MacBroadcast(_).U)
 
   val macType = Reg(Vec(2, UInt(8.W)))
   val rxData = io.rx.bits
@@ -90,17 +86,17 @@ case class MacReceive() extends Module with NetStream {
   stateShift := false.B
   switch (inStateReg) {
     is (sIdle) {
-      when (rxValid && rxData === preamble(0)) {
+      when (rxValid && rxData === "h55".U) {
         cnt.inc()
         stateShift := true.B
         inStateReg := sPreamble
       }
     }
     is (sPreamble) {
-      parser(Array(preamble), sDestMac)
+      parser(Array(MacPreamble), sDestMac)
     }
     is (sDestMac) {
-      parser(Array(macAddress, broadMacAddress), sSrcMac)
+      parser(Array(MacAddress, MacBroadcast), sSrcMac)
     }
     is (sSrcMac) {
       idleReceive(6, sType)

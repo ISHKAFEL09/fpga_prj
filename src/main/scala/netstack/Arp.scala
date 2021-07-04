@@ -2,6 +2,7 @@ package netstack
 
 import chisel3._
 import chisel3.util._
+import netstack.Interface.Ip2ArpIf
 
 case class ArpDebugPort() extends Bundle {
   val op = UInt(16.W)
@@ -13,6 +14,8 @@ case class ArpDebugPort() extends Bundle {
   val ramWriteAddr = UInt(8.W)
   val ramWriteIp = UInt(32.W)
   val ramWriteMac = UInt(48.W)
+  val arpOutValid = Bool()
+  val arpOutData = UInt(8.W)
 }
 
 case class ArpType() extends Bundle {
@@ -20,10 +23,11 @@ case class ArpType() extends Bundle {
   val mac = UInt(48.W)
 }
 
-case class Arp() extends Module with NetStream {
+case class Arp() extends Module with ReceiveStream with SendStream {
   val io = IO(new Bundle() {
     val mac2Arp = Flipped(ValidIO(UInt(8.W)))
-    val arp2Mac = ValidIO(UInt(8.W))
+    val arp2Mac = DecoupledIO(UInt(8.W))
+    val ip2Arp = Flipped(Ip2ArpIf())
     val debugPort = Output(ArpDebugPort())
   })
 
@@ -94,6 +98,71 @@ case class Arp() extends Module with NetStream {
   arpRamReadEnable := false.B
   arpRamReadAddress := 0.U
 
+  val arpReqIn = Wire(Flipped(DecoupledIO(UInt(81.W))))
+  arpReqIn.bits := Cat(true.B, ipSrc.asTypeOf(UInt(32.W)), macSrc.asTypeOf(UInt(48.W))) // arp response
+  arpReqIn.valid := op.asTypeOf(UInt()) === ArpOpReq && RegNext(stateReg === sDone)
+  val arpReqOut = Queue(arpReqIn, 16)
+
+  val ipReqIn = Wire(Flipped(DecoupledIO(UInt(81.W))))
+  ipReqIn.bits := Cat(false.B, io.ip2Arp.sendReq.bits, "hFFFFFFFFFFFF".U(48.W)) // arp request
+  ipReqIn.valid := io.ip2Arp.sendReq.valid
+  val ipReqOut = Queue(ipReqIn, 16)
+
+  val arpSend = Wire(DecoupledIO(UInt(81.W)))
+  val arb = Module(new Arbiter(UInt(), 2))
+  arb.io.in(0) <> ipReqOut
+  arb.io.in(1) <> arpReqOut
+  arpSend <> arb.io.out
+  arpSend.ready := false.B
+
+  val sendIdle :: sendPre :: sendOp :: sendSrcMac :: sendSrcIp :: sendDestMac :: sendDestIp :: sendDone :: _ = Enum(10)
+  val sendStateReg = RegInit(sendIdle)
+  override val sCnt: Counter = Counter(8)
+  override val sState: UInt = sendStateReg
+  override val sPort = io.arp2Mac
+
+  val arpSendReg = RegEnable(arpSend.bits, arpSend.fire())
+  val arpSendOp = Wire(Bool())
+  val arpSendIp = Wire(UInt(32.W))
+  val arpSendMac = Wire(UInt(48.W))
+  arpSendOp := arpSendReg(80)
+  arpSendIp := arpSendReg(79, 48)
+  arpSendMac := arpSendReg(47, 0)
+
+  switch (sendStateReg) {
+    is (sendIdle) {
+      when (io.arp2Mac.ready && arpSend.valid) {
+        arpSend.ready := true.B
+        sendStateReg := sendPre
+      }
+    }
+    is (sendPre) {
+      sendData("h000108000604".U(48.W), sendOp)
+    }
+    is (sendOp) {
+      when (arpSendOp) {
+        sendData(ArpOpResp, sendSrcMac)
+      } otherwise {
+        sendData(ArpOpReq, sendSrcMac)
+      }
+    }
+    is (sendSrcMac) {
+      sendData(MacAddress, sendSrcIp)
+    }
+    is (sendSrcIp) {
+      sendData(IpAddress, sendDestMac)
+    }
+    is (sendDestMac) {
+      sendData(arpSendMac, sendDestIp)
+    }
+    is (sendDestIp) {
+      sendData(arpSendIp, sendIdle)
+    }
+  }
+
+  arpSend.ready := sendStateReg === sendIdle
+  io.arp2Mac.valid := sendStateReg =/= sendIdle
+
   io.debugPort.op := op.asTypeOf(UInt())
   io.debugPort.macSrc := macSrc.asTypeOf(UInt())
   io.debugPort.macDest := macDest.asTypeOf(UInt())
@@ -103,4 +172,6 @@ case class Arp() extends Module with NetStream {
   io.debugPort.ramWriteAddr := arpRamWriteAddress
   io.debugPort.ramWriteIp := arpRamWriteData.ip
   io.debugPort.ramWriteMac := arpRamWriteData.mac
+  io.debugPort.arpOutValid := io.arp2Mac.valid
+  io.debugPort.arpOutData := io.arp2Mac.bits
 }
