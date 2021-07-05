@@ -16,6 +16,7 @@ case class ArpDebugPort() extends Bundle {
   val ramWriteMac = UInt(48.W)
   val arpOutValid = Bool()
   val arpOutData = UInt(8.W)
+  val state = UInt(4.W)
 }
 
 case class ArpType() extends Bundle {
@@ -174,4 +175,5 @@ case class Arp() extends Module with ReceiveStream with SendStream {
   io.debugPort.ramWriteMac := arpRamWriteData.mac
   io.debugPort.arpOutValid := io.arp2Mac.valid
   io.debugPort.arpOutData := io.arp2Mac.bits
+  io.debugPort.state := sendStateReg
 }

@@ -90,6 +90,11 @@
     "description":"mark_debug = \"true\""
   },
   {
+    "class":"firrtl.AttributeAnnotation",
+    "target":"~NetStack|Arp>io_debugPort_state",
+    "description":"mark_debug = \"true\""
+  },
+  {
     "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~NetStack|Arp>io_debugPort_op"
   },
@@ -132,6 +137,10 @@
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~NetStack|Arp>io_debugPort_arpOutData"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~NetStack|Arp>io_debugPort_state"
   },
   {
     "class":"firrtl.AttributeAnnotation",
